@@ -30,7 +30,9 @@ export default function App() {
 
   function handleReset() {
     setCounterMinutes(resetTime)
+    setCounterSeconds(0)
     setWorkTime(resetTime)
+    handlePause()
   }
 
   function decreaseTime(minutes) {
@@ -49,8 +51,7 @@ export default function App() {
       }
 
       if(minutes === 0 && seconds === 0) {
-        clearInterval(interval)
-        setIntervalID(null)    
+        handlePause()
       }
     }, 1000));   
   }
