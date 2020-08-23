@@ -1,28 +1,99 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View, Vibration } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler'
+import Slider from '@react-native-community/slider'
 
-
-import Sliders from './components/Sliders'
 // Vibration.vibrate([500, 500, 500])
 
 export default function App() {
+  const [workTime, setWorkTime] = useState(5)
+  const [restTime, setRestTime] = useState(1)
+  const [counterMinutes, setCounterMinutes] = useState(0)
+  const [counterSeconds, setCounterSeconds] = useState(0)
+  const [resetTime, setResetTime] = useState(0)
+
+  function handleStart() {
+    setResetTime(workTime)
+    setCounterMinutes(workTime)
+    decreaseTime(workTime)
+  }
+
+  function handlePause() {
+    console.log("para")
+  }
+
+  function handleReset() {
+    setCounterMinutes(resetTime)
+    setWorkTime(resetTime)
+  }
+
+  function decreaseTime(minutes) {
+    clearInterval(interval)
+
+    let seconds = 60
+    minutes--
+    setCounterMinutes(minutes)
+    setCounterSeconds(59)
+    let interval = setInterval(() => {
+      seconds--
+      setCounterSeconds(seconds)
+      if(seconds < 0 && minutes >= 1) {
+        minutes--
+        setCounterMinutes(minutes)
+        seconds = 59
+        setCounterSeconds(seconds)
+      }
+
+      if(minutes === 0 && seconds === 0) {
+        clearInterval(interval)      
+      }
+    }, 1000);    
+  }
+
   return (
     <View style={styles.container}>
       <StatusBar style="auto" backgroundColor="#cecece" />
-      <Text style={styles.counter}>25:00</Text>
+      <Text style={styles.counter}>
+        {String(counterMinutes)[1] ? counterMinutes : `0${counterMinutes}`}:{String(counterSeconds)[1] ? counterSeconds : `0${counterSeconds}`}
+      </Text>
 
-      <Sliders />
+      <View>
+        <View style={styles.range}>
+          <Slider
+            style={{width: 270, height: 33}}
+            minimumValue={1} // <----- 5
+            maximumValue={50}
+            thumbTintColor="#09f"
+            minimumTrackTintColor="#09f"
+            step={5}
+            onValueChange={setWorkTime}
+          />
+          <Text>{workTime} min</Text>
+        </View>
+
+        <View style={styles.range}>
+          <Slider
+            style={{width: 270, height: 33}}
+            minimumValue={1}
+            maximumValue={10}
+            thumbTintColor="#fa0"
+            minimumTrackTintColor="#fa0"
+            step={1}
+            onValueChange={setRestTime}
+          />
+          <Text>{restTime} min</Text>
+        </View>
+      </View>
 
       <View style={styles.buttonGroup}>
-        <RectButton style={styles.start}>
+        <RectButton style={styles.start} onPress={handleStart}>
           <Text style={styles.buttonText}>Iniciar</Text>
         </RectButton>
-        <RectButton style={styles.pause}>
+        <RectButton style={styles.pause} onPress={handlePause}>
           <Text style={styles.buttonText}>Parar</Text>
         </RectButton>
-        <RectButton style={styles.reset}>
+        <RectButton style={styles.reset} onPress={handleReset}>
           <Text style={styles.buttonText}>Reiniciar</Text>
         </RectButton>
       </View>
@@ -46,6 +117,12 @@ const styles = StyleSheet.create({
     maxHeight: 80
   },
 
+  range: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+
   buttonGroup: {
     flex: 1,
     flexDirection: 'row',
@@ -56,7 +133,7 @@ const styles = StyleSheet.create({
   },
 
   start: {
-    backgroundColor: '#0f0',
+    backgroundColor: '#7e0',
     height: 40,
     width: 80,
     borderRadius: 8,
@@ -66,7 +143,7 @@ const styles = StyleSheet.create({
   },
 
   pause: {
-    backgroundColor: '#f00',
+    backgroundColor: '#f42',
     height: 40,
     width: 80,
     borderRadius: 8,
@@ -75,7 +152,7 @@ const styles = StyleSheet.create({
   },
 
   reset: {
-    backgroundColor: '#00f',
+    backgroundColor: '#57f',
     height: 40,
     width: 80,
     borderRadius: 8,
