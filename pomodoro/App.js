@@ -50,7 +50,7 @@ export default function App() {
         setCounterSeconds(seconds)
       }
 
-      if(minutes === 0 && seconds === 0) {
+      if(minutes === 0 && seconds < 0) {
         handlePause()
       }
     }, 1000));   
