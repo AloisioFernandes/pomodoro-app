@@ -12,6 +12,9 @@ export default function App() {
   const [counterMinutes, setCounterMinutes] = useState(0)
   const [counterSeconds, setCounterSeconds] = useState(0)
   const [resetTime, setResetTime] = useState(0)
+  const [interval, setIntervalID] = useState('')
+  
+  let intervalId
 
   function handleStart() {
     setResetTime(workTime)
@@ -21,6 +24,8 @@ export default function App() {
 
   function handlePause() {
     console.log("para")
+    clearInterval(interval)
+    setIntervalID(null)
   }
 
   function handleReset() {
@@ -33,7 +38,7 @@ export default function App() {
     minutes--
     setCounterMinutes(minutes)
     setCounterSeconds(59)
-    let interval = setInterval(() => {
+    setIntervalID(setInterval(() => {
       seconds--
       setCounterSeconds(seconds)
       if(seconds < 0 && minutes >= 1) {
@@ -44,9 +49,10 @@ export default function App() {
       }
 
       if(minutes === 0 && seconds === 0) {
-        clearInterval(interval)      
+        clearInterval(interval)
+        setIntervalID(null)    
       }
-    }, 1000);    
+    }, 1000));   
   }
 
   return (
