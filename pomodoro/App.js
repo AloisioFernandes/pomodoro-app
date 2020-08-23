@@ -29,8 +29,6 @@ export default function App() {
   }
 
   function decreaseTime(minutes) {
-    clearInterval(interval)
-
     let seconds = 60
     minutes--
     setCounterMinutes(minutes)
