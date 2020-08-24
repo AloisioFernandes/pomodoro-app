@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Vibration } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler'
 import Slider from '@react-native-community/slider'
@@ -13,17 +13,15 @@ export default function App() {
   const [counterSeconds, setCounterSeconds] = useState(0)
   const [resetTime, setResetTime] = useState(0)
   const [interval, setIntervalID] = useState('')
-  
-  let intervalId
+  const [rest, setRest] = useState(true)
 
   function handleStart() {
     setResetTime(workTime)
     setCounterMinutes(workTime)
-    decreaseTime(workTime)
+    decreaseTime()
   }
 
   function handlePause() {
-    console.log("para")
     clearInterval(interval)
     setIntervalID(null)
   }
@@ -35,7 +33,14 @@ export default function App() {
     handlePause()
   }
 
-  function decreaseTime(minutes) {
+  function decreaseTime() {
+    setRest(false)
+  }
+
+  useEffect(() => {
+    handlePause()
+    let minutes
+    rest ? minutes = restTime : minutes = workTime
     let seconds = 60
     minutes--
     setCounterMinutes(minutes)
@@ -50,11 +55,12 @@ export default function App() {
         setCounterSeconds(seconds)
       }
 
-      if(minutes === 0 && seconds < 0) {
-        handlePause()
+      if(minutes === 0 && seconds < 1) {
+        setRest(!rest)
+        console.log(rest)
       }
     }, 1000));   
-  }
+  }, [rest])
 
   return (
     <View style={styles.container}>
