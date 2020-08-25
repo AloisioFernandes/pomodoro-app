@@ -13,28 +13,28 @@ export default function App() {
   const [counterSeconds, setCounterSeconds] = useState(0)
   const [resetTime, setResetTime] = useState(0)
   const [interval, setIntervalID] = useState('')
-  const [rest, setRest] = useState(true)
+  const [rest, setRest] = useState(false)
+  const [running, setRunning] = useState(false)
 
   function handleStart() {
     setResetTime(workTime)
     setCounterMinutes(workTime)
-    decreaseTime()
+    setRest(false)
+    setRunning(true)
   }
 
   function handlePause() {
     clearInterval(interval)
     setIntervalID(null)
+    setRunning(false)
   }
 
   function handleReset() {
     setCounterMinutes(resetTime)
     setCounterSeconds(0)
     setWorkTime(resetTime)
+    setRunning(false)
     handlePause()
-  }
-
-  function decreaseTime() {
-    setRest(false)
   }
 
   useEffect(() => {
@@ -54,13 +54,12 @@ export default function App() {
         seconds = 59
         setCounterSeconds(seconds)
       }
-
       if(minutes === 0 && seconds < 1) {
         setRest(!rest)
         console.log(rest)
       }
-    }, 1000));   
-  }, [rest])
+    }, 1000));
+  }, [rest, running])
 
   return (
     <View style={styles.container}>
