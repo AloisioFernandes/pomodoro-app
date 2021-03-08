@@ -5,61 +5,50 @@ import { RectButton } from 'react-native-gesture-handler'
 import Slider from '@react-native-community/slider'
 
 // Vibration.vibrate([500, 500, 500])
+let countdownTimeout
 
 export default function App() {
-  const [workTime, setWorkTime] = useState(5)
-  const [restTime, setRestTime] = useState(1)
+  const [workTime, setWorkTime] = useState(0.10 * 60)
+  const [restTime, setRestTime] = useState(0.05 * 60)
+  const [currentTime, setCurrentTime] = useState(0.10 * 60)
   const [counterMinutes, setCounterMinutes] = useState(0)
   const [counterSeconds, setCounterSeconds] = useState(0)
-  const [resetTime, setResetTime] = useState(0)
-  const [interval, setIntervalID] = useState('')
-  const [rest, setRest] = useState(false)
-  const [running, setRunning] = useState(false)
+  const [isRest, setIsRest] = useState(false)
+  const [isRunning, setIsRunning] = useState(false)
+
+  const minutes = Math.floor(currentTime / 60)
+  const seconds = currentTime % 60
 
   function handleStart() {
-    setResetTime(workTime)
     setCounterMinutes(workTime)
-    setRest(false)
-    setRunning(true)
+    setIsRest(false)
+    setIsRunning(true)
   }
 
   function handlePause() {
-    clearInterval(interval)
-    setIntervalID(null)
-    setRunning(false)
+    setIsRunning(false)
   }
 
   function handleReset() {
-    setCounterMinutes(resetTime)
-    setCounterSeconds(0)
-    setWorkTime(resetTime)
-    setRunning(false)
-    handlePause()
+    clearTimeout(countdownTimeout)
+    setIsRunning(false)
+    setCurrentTime(workTime)
   }
 
   useEffect(() => {
-    handlePause()
-    let minutes
-    rest ? minutes = restTime : minutes = workTime
-    let seconds = 60
-    minutes--
-    setCounterMinutes(minutes)
-    setCounterSeconds(59)
-    setIntervalID(setInterval(() => {
-      seconds--
-      setCounterSeconds(seconds)
-      if(seconds < 0 && minutes >= 1) {
-        minutes--
-        setCounterMinutes(minutes)
-        seconds = 59
-        setCounterSeconds(seconds)
-      }
-      if(minutes === 0 && seconds < 1) {
-        setRest(!rest)
-        console.log(rest)
-      }
-    }, 1000));
-  }, [rest, running])
+    if(isRunning && currentTime > 0) {
+      countdownTimeout = setTimeout(() => {
+        setCurrentTime(currentTime - 1)
+      }, 1000) 
+    } else if (isRunning && !isRest && currentTime === 0) {
+      setIsRest(true)
+      setCurrentTime(restTime)
+    } else if (isRunning && isRest && currentTime === 0) {
+      setIsRest(false)
+      setCurrentTime(workTime)
+    }
+    
+  }, [isRest, isRunning])
 
   return (
     <View style={styles.container}>
@@ -77,7 +66,7 @@ export default function App() {
             thumbTintColor="#09f"
             minimumTrackTintColor="#09f"
             step={5}
-            onValueChange={setWorkTime}
+            onValueChange={(value) => setWorkTime(value * 60)}
           />
           <Text>{workTime} min</Text>
         </View>
@@ -90,7 +79,7 @@ export default function App() {
             thumbTintColor="#fa0"
             minimumTrackTintColor="#fa0"
             step={1}
-            onValueChange={setRestTime}
+            onValueChange={(value) => setRestTime(value * 60)}
           />
           <Text>{restTime} min</Text>
         </View>
