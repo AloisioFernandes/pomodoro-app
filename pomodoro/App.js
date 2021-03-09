@@ -11,21 +11,23 @@ export default function App() {
   const [workTime, setWorkTime] = useState(0.10 * 60)
   const [restTime, setRestTime] = useState(0.05 * 60)
   const [currentTime, setCurrentTime] = useState(0.10 * 60)
-  const [counterMinutes, setCounterMinutes] = useState(0)
-  const [counterSeconds, setCounterSeconds] = useState(0)
   const [isRest, setIsRest] = useState(false)
   const [isRunning, setIsRunning] = useState(false)
 
   const minutes = Math.floor(currentTime / 60)
   const seconds = currentTime % 60
 
+  const [minuteLeft, minuteRight] = String(minutes).padStart(2, '0').split('')
+  const [secondLeft, secondRight] = String(seconds).padStart(2, '0').split('')
+
   function handleStart() {
-    setCounterMinutes(workTime)
+    setCurrentTime(workTime)
     setIsRest(false)
     setIsRunning(true)
   }
 
   function handlePause() {
+    clearTimeout(countdownTimeout)
     setIsRunning(false)
   }
 
@@ -42,20 +44,26 @@ export default function App() {
       }, 1000) 
     } else if (isRunning && !isRest && currentTime === 0) {
       setIsRest(true)
-      setCurrentTime(restTime)
+      setTimeout(() => {
+        setCurrentTime(restTime)
+      }, 1000)
     } else if (isRunning && isRest && currentTime === 0) {
       setIsRest(false)
-      setCurrentTime(workTime)
+      setTimeout(() => {
+        setCurrentTime(workTime)
+      }, 1000)
     }
-    
-  }, [isRest, isRunning])
+  }, [isRunning, currentTime])
 
   return (
     <View style={styles.container}>
       <StatusBar style="auto" backgroundColor="#cecece" />
-      <Text style={styles.counter}>
-        {String(counterMinutes)[1] ? counterMinutes : `0${counterMinutes}`}:{String(counterSeconds)[1] ? counterSeconds : `0${counterSeconds}`}
-      </Text>
+
+      <View style={styles.counterContainer}>
+        <Text style={styles.counter}>
+          {`${minuteLeft}${minuteRight}:${secondLeft}${secondRight}`}
+        </Text>
+      </View>
 
       <View>
         <View style={styles.range}>
@@ -86,13 +94,13 @@ export default function App() {
       </View>
 
       <View style={styles.buttonGroup}>
-        <RectButton style={styles.start} onPress={handleStart}>
+        <RectButton style={[styles.button, styles.start]} onPress={handleStart}>
           <Text style={styles.buttonText}>Iniciar</Text>
         </RectButton>
-        <RectButton style={styles.pause} onPress={handlePause}>
+        <RectButton style={[styles.button, styles.pause]} onPress={handlePause}>
           <Text style={styles.buttonText}>Parar</Text>
         </RectButton>
-        <RectButton style={styles.reset} onPress={handleReset}>
+        <RectButton style={[styles.button, styles.reset]} onPress={handleReset}>
           <Text style={styles.buttonText}>Reiniciar</Text>
         </RectButton>
       </View>
@@ -103,17 +111,25 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#eee',
     alignItems: 'center',
     justifyContent: 'center',
   },
 
-  counter: {
+  counterContainer: {
     flex: 1,
+    backgroundColor: '#fff',
     flexDirection: 'row',
-    fontSize: 70,
-    marginBottom: 60,
-    maxHeight: 80
+    alignItems: 'center',
+    justifyContent: 'center',
+    maxHeight: 100,
+    minWidth: '70%',
+    marginBottom: 20,
+    borderRadius: 10
+  },
+
+  counter: {
+    fontSize: 80,
   },
 
   range: {
@@ -131,32 +147,24 @@ const styles = StyleSheet.create({
     width: 300
   },
 
-  start: {
-    backgroundColor: '#7e0',
+  button: {
     height: 40,
     width: 80,
     borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center'
-    
+  },
+
+  start: {
+    backgroundColor: '#7e0'    
   },
 
   pause: {
-    backgroundColor: '#f42',
-    height: 40,
-    width: 80,
-    borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center'
+    backgroundColor: '#f42'
   },
 
   reset: {
-    backgroundColor: '#57f',
-    height: 40,
-    width: 80,
-    borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center'
+    backgroundColor: '#57f'
   },
 
   buttonText: {
