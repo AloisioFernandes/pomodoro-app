@@ -3,9 +3,9 @@
 
 # Aplicativo
 <p align="center">
-  <p><img align="center" src=".github/Pomodoro Home.png" alt="Pomodoro Home" width="800" border="0"></p>
-  <p><img align="center" src=".github/Pomodoro Running.png" alt="Pomodoro Running" width="800" border="0"></p>
-  <p><img align="center" src=".github/Pomodoro Paused.png" alt="Pomodoro Paused" width="800" border="0"></p>
+  <p><img align="center" src=".github/Pomodoro Home.png" alt="Pomodoro Home" width="275" border="0"></p>
+  <p><img align="center" src=".github/Pomodoro Running.png" alt="Pomodoro Running" width="275" border="0"></p>
+  <p><img align="center" src=".github/Pomodoro Paused.png" alt="Pomodoro Paused" width="275" border="0"></p>
 </p>
 
 # Funcionalidades
@@ -33,6 +33,7 @@ Digite o seguinte comando dentro da pasta pomodoro através do terminal:
 ## Terceiro passo - iniciar projeto
 Ainda na pasta pomodoro, digite o seguinte comando no terminal:
  - expo start
+
 Ao executar esse comando, uma página abrirá no seu navegador web. Utilize o aplicativo do expo para abrir o app através do QRCode da página.
 # Principais Tecnologias
  - [ReactNative](https://reactnative.dev/)
