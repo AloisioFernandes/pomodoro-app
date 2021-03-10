@@ -1,8 +1,18 @@
+
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Vibration } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler'
 import Slider from '@react-native-community/slider'
+
+import { AppLoading } from 'expo'
+import { loadAsync } from 'expo-font'
+
+const fetchFont = () => {
+  return loadAsync({
+  'lato-regular': require('./assets/fonts/Lato-Regular.ttf')
+  })
+}
 
 let countdownTimeout
 
@@ -13,6 +23,7 @@ export default function App() {
   const [isHome, setIsHome] = useState(true)
   const [isRest, setIsRest] = useState(false)
   const [isRunning, setIsRunning] = useState(false)
+  const [isFontLoaded, setIsFontLoaded] = useState(false)
 
   const minutes = Math.floor(currentTime / 60)
   const seconds = currentTime % 60
@@ -67,6 +78,15 @@ export default function App() {
     }
   }, [isRunning, currentTime])
 
+  if(!isFontLoaded) {
+    return (
+      <AppLoading 
+        startAsync={fetchFont}
+        onFinish={() => setIsFontLoaded(true)}
+      />
+    )
+  }
+
   return (
     <View style={styles.container}>
       <StatusBar style="auto" backgroundColor="#cecece" />
@@ -92,7 +112,7 @@ export default function App() {
           <Text style={styles.timeLabel}>{String(Math.round(workTime / 60)).padStart(2, '0')} min</Text>
         </View>
 
-        <Text style={styles.label}>Tempo de Descanço</Text>
+        <Text style={styles.label}>Tempo de Repouso</Text>
         <View style={styles.range}>
           <Slider
             style={{width: 270, height: 33}}
@@ -118,8 +138,8 @@ export default function App() {
               <Text style={styles.buttonText}>Parar</Text>
             </RectButton>
           ) : (
-            <RectButton style={[styles.button, styles.pause]} onPress={handleComeback}>
-              <Text style={styles.buttonText}>Retomar</Text>
+            <RectButton style={[styles.button, styles.comeback]} onPress={handleComeback}>
+              <Text style={{ color: '#000',fontSize: 22 }}>Retomar</Text>
             </RectButton>
           ) }
           <RectButton style={[styles.button, styles.reset]} onPress={handleReset}>
@@ -152,7 +172,8 @@ const styles = StyleSheet.create({
   },
 
   counter: {
-    fontSize: 80,
+    fontFamily: 'lato-regular',
+    fontSize: 80
   },
 
   label: {
@@ -196,6 +217,12 @@ const styles = StyleSheet.create({
 
   pause: {
     backgroundColor: '#f44336',
+    width: '45%',
+    borderRadius: 8
+  },
+
+  comeback: {
+    backgroundColor: '#ef9a9a',
     width: '45%',
     borderRadius: 8
   },
