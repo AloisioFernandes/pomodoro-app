@@ -3,9 +3,9 @@
 
 # Aplicativo
 <p align="center">
-  <p><img align="center" src=".github/Pomodoro Home.png" alt="Pomodoro Home" width="275" border="0"></p>
-  <p><img align="center" src=".github/Pomodoro Running.png" alt="Pomodoro Running" width="275" border="0"></p>
-  <p><img align="center" src=".github/Pomodoro Paused.png" alt="Pomodoro Paused" width="275" border="0"></p>
+  <img align="center" src=".github/Pomodoro Home.png" alt="Pomodoro Home" width="275" border="0">
+  <img align="center" src=".github/Pomodoro Running.png" alt="Pomodoro Running" width="275" border="0">
+  <img align="center" src=".github/Pomodoro Paused.png" alt="Pomodoro Paused" width="275" border="0">
 </p>
 
 # Funcionalidades
