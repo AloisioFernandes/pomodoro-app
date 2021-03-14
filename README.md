@@ -22,7 +22,7 @@
 
     Instalar o Expo
     https://docs.expo.io/get-started/installation/
-# Primeiro passo - baixar o projeto
+## Primeiro passo - baixar o projeto
 Faça download do repositório acima ou use o seguinte comando na pasta onde deseja baixar o projeto:
  - git clone https://github.com/AloisioFernandes/pomodoro-app.git
 
